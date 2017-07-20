@@ -148,3 +148,84 @@ FibSpirals<-function(levels, ind=F)
   }
   return(Mat)
 }
+
+contains<-function(ray, N, list=F)
+{
+  if(!list)
+  {
+    for(i in ray)
+    {
+      if(i == N) return(T)
+    }
+    return(F)
+  }
+  else
+  {
+    if(is.null(ray$N)) return(F)
+    return(T)
+  }
+}
+
+spiralMatrix<-function(levels)
+{
+  ODDV<-levels*2-1
+  FinalM<-matrix(0, nrow=ODDV,ncol=ODDV)
+  mid<-ceiling(ODDV/2)
+  FinalM[mid,mid]<-1
+  n<-1
+  m<-ODDV
+  while(ODDV!=1)
+  {
+    coefFinal<-ODDV^2
+    coefInitial<-(ODDV-2)^2+1
+    outerVals<-coefInitial:coefFinal
+    FinalM<-outerMat(FinalM, outerVals, n, m)
+    ODDV<-ODDV-2
+    n<-n+1
+    m<-m-1
+  }
+
+  return(FinalM)
+}
+
+
+outerMat<-function(Matrix, outer, currentLevel, total)
+{
+  final<-total
+  currentR<-currentLevel+1
+  currentC<-final
+  a<-1
+  while(currentR<final)
+  {
+    Matrix[currentR, currentC]<-outer[a]
+    currentR<-currentR+1
+    a<-a+1
+  }
+  while(currentC>currentLevel)
+  {
+    Matrix[currentR, currentC]<-outer[a]
+    currentC<-currentC-1
+    a<-a+1
+  }
+  while(currentR>currentLevel)
+  {
+    Matrix[currentR, currentC]<-outer[a]
+    currentR<-currentR-1
+    a<-a+1
+  }
+  while(currentC<=final)
+  {
+    Matrix[currentR, currentC]<-outer[a]
+    currentC<-currentC+1
+    a<-a+1
+  }
+  return(Matrix)
+}
+
+corners<-function(size)
+{
+  levels<-ceiling(size/2)+1
+  MAT<-spiralMatrix(levels)
+  cornerVals<-c(MAT[1,1],MAT[1,size],MAT[size,1],MAT[size,size])
+  return(cornerVals)
+}
