@@ -149,5 +149,8 @@ CircularPrimes<-function(low,hi)
   return(sort(circPs))
 }
 
-
-
+digitVector<-function(number)
+{
+  vec<-as.numeric(strsplit(as.character(number),"")[[1]])
+  return(vec)
+}
