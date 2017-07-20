@@ -1,26 +1,41 @@
 Fib<-function(x, n)
 {
-  y = x;
-  z = 0;
-  if(n<=2)
-  {  
-    if(n<1)return();
-    if(n==1)return(x);
-    if(n==2)return(c(x,x));
-  }
-  fib = c(x,y);
-  n=n-2;
-  while(n>0)
+  if(length(x) == 1)
   {
-    fib = c(fib,x+y);
-    z=y;
-    y=x+y;
-    x=z;
-    n=n-1;
+    y = x;
+    z = 0;
+    if(n<=2)
+    {
+      if(n<1)return();
+      if(n==1)return(x);
+      if(n==2)return(c(x,x));
+    }
+    fib = c(x,y);
+    n=n-2;
+    while(n>0)
+    {
+      fib = c(fib,x+y);
+      z=y;
+      y=x+y;
+      x=z;
+      n=n-1;
+    }
+    return(fib);
   }
-  return(fib);
+  else
+  {
+    fib<-c()
+    for(i in 1:length(x))
+    {
+      fib<-c(fib, Fib(x[i],n))
+    }
+    return(matrix(fib, ncol = length(x)))
+  }
 }
+
+
 Fibs<-Fib(1,1000)
+
 FibVar<-function(x,y,n)
 {
   if(n<=2)
