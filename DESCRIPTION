@@ -1,11 +1,10 @@
 Package: PrimalUrges
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Tools for working with Primes and Fibonacci Numbers/Sequences
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Author: Duncan McKinnon
+Maintainer: duncan96@uw.edu
+Description: Test data structures for primes, get prime factors, generate fibonacci sequences etc.
+License: GNU 3.0
 Encoding: UTF-8
 LazyData: true
