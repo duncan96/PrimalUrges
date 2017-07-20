@@ -1,10 +1,19 @@
 Package: PrimalUrges
 Type: Package
-Title: Tools for working with Primes and Fibonacci Numbers/Sequences
+Title: prime numbers and fibonacci sequences
 Version: 0.1.0
+Date: 2017-07-20
 Author: Duncan McKinnon
-Maintainer: duncan96@uw.edu
+Maintainer: Duncan McKinnon <duncan96@uw.edu>
 Description: Test data structures for primes, get prime factors, generate fibonacci sequences etc.
 License: GNU 3.0
 Encoding: UTF-8
 LazyData: true
+URL: https://github.com/duncan96/PrimalUrges
+LazyLoad: yes
+Depends: R (>= 3.0.0), stats, registry
+VignetteBuilder: knitr
+Packaged: 2017-07-20
+NeedsCompilation: no
+Repository: CRAN
+
