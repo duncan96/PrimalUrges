@@ -1,5 +1,6 @@
 prime<-function(x, int=F)
 {
+  if(length(x)>1) return(primeVec(x, int))
   a=F
   b=T
   ifelse(int, a<-0, a<-F)
