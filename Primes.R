@@ -1,17 +1,13 @@
-prime<-function(x, int=F)
+prime<-function(x, intv=F)
 {
-  if(length(x)>1) return(primeVec(x, int))
-  a=F
-  b=T
-  ifelse(int, a<-0, a<-F)
-  ifelse(int, b<-1, b<-T)
-  if(x%%1!=0) return(a) #x<-primeDec(x)
-  if(x<=0 || x==1) return(a);
-  if(x<=3) return(b);
-  n = sqrt(x);
+  a <- ifelse(intv, 0, F)
+  b <- ifelse(intv, 1, T)
+  if(x <= 1) return(a)
+  if(x <= 3) return(b)
+  n = sqrt(x)
   for(i in 2:n)
   {
-    if(x%%i == 0) return(a);
+    if(x %% i == 0) return(a)
   }
   return(b);
 }
@@ -30,7 +26,7 @@ primeDec<-function(x)
   return(x)
 }
 
-primeVec<-function(x, int=F)
+primeVec<-function(x, int=T)
 {
   n = length(x);
   if(n == 0) return();
@@ -54,7 +50,7 @@ primeFact<-function(x)
   halve = x/2;
   for(i in 2:halve)
   {
-    if(x%%i==0)
+    if(x %% i == 0)
     {
       if(prime(i))
       {
@@ -72,7 +68,7 @@ largestPF<-function(x)
   Y<-c()
   for(i in 2:halve)
   {
-    if(x%%i==0)
+    if(x %% i == 0)
     {
         Y<-c(Y,i)
     }
@@ -121,37 +117,11 @@ primeMatrix<-function(start,cols,rows)
     {
       for(j in 1:cols)
       {
-        Mat[i,j]=prime(start, T)
+        Mat[i,j] = ifelse(prime(start, F), start, 0)
         start = start+1
       }
     }
     return(Mat)
   }
   return(-1)
-}
-
-CircularPrimes<-function(low,hi)
-{
-  circPs<-c()
-  a<-low:hi
-  if(any(c(2,5) %in% a))circPs<-c(2,5,circPs)
-  for(i in a)
-  {
-    digV<-digitVector(i)
-    if(any(c(0,2,4,5,6,8) %in% digV)){}
-    else
-    {
-      vec<-digitRotations(i)
-      status<-primeVec(vec)
-      if(all(status) & !any(vec %in% circPs))
-        circPs<-c(circPs, vec)
-    }
-  }
-  return(sort(circPs))
-}
-
-digitVector<-function(number)
-{
-  vec<-as.numeric(strsplit(as.character(number),"")[[1]])
-  return(vec)
 }
