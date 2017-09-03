@@ -1,127 +1,145 @@
-prime<-function(x, intv=F)
+
+#efficient boolean primality check
+atomic_prime<-function(x)
 {
-  a <- ifelse(intv, 0, F)
-  b <- ifelse(intv, 1, T)
-  if(x <= 1) return(a)
-  if(x <= 3) return(b)
+  if(x <= 1){return(F)}
+  if(x <= 3){return(T)}
   n = sqrt(x)
   for(i in 2:n)
   {
-    if(x %% i == 0) return(a)
+    if(x %% i == 0) return(F)
   }
-  return(b);
+  return(T)
 }
 
 
-
-primeDec<-function(x)
+#basic prime function for homogenous data structures
+prime <- function(x, intv = F)
 {
-  n=0;
-  while(x%%1!=0 && n!=10)
+  y <- as.array(x)
+  if(is.numeric(y))
   {
-    x=x*10
-    n=n+1
+    if(length(y[!y%%1]) > 0)
+    {
+      ret <- ifelse(!y%%1 == 0, 0, x)
+      a <- ifelse(intv, 1, T)
+      b <- ifelse(intv, 0, F)
+      for(i in 1:length(ret))
+      {
+        if(ret[i] != 0)
+        {
+          ret[i] <- ifelse(atomic_prime(ret[i]), a, b)
+        }
+      }
+      if(is.matrix(x))
+      {
+        return(matrix(ret, dim(x)[1], dim(x)[2]))
+      }
+      else
+      {
+        return(ret)
+      }
+    }
   }
-  if(n==10) return(-1)
-  return(x)
+  return("error: argument is not numeric or atomic")
 }
 
-primeVec<-function(x, int=T)
-{
-  n = length(x);
-  if(n == 0) return();
-  reRay = c();
-  for(i in 1:n)
-  {
-    reRay = c(reRay, prime(x[i], int));
-  }
-  return(as.vector(reRay));
-}
 
+#returns vector containing only the primes in x
 primeFilter<-function(x)
 {
-  return(x[primeVec(x)]);
+  if(is.numeric(x)
+
+     )
+  {
+    return(x[prime(x)])
+  }
+  return("error: not an atomic object")
 }
 
+
+#low level prime factorial, returns vector of prime factors
+atomic_primeFact<-function(x)
+{
+  if(atomic_prime(x))return(x)
+  if(x <= 1) return(-1)
+  factList = c()
+  halve = x/2
+  for(i in 2:halve)
+  {
+    if(x %% i == 0)
+    {
+      if(atomic_prime(i))
+      {
+        factList=c(factList,i)
+      }
+    }
+  }
+  return(sort(factList))
+}
+
+
+#get the largest prime factor of x
+largestPrimeFactor<-function(x)
+{
+  if(is.numeric(x) & length(x) == 1)
+  {
+    if(atomic_prime(x))return(x)
+    halve = x/2
+    for(i in halve:2)
+    {
+      if(x %% i == 0 & atomic_prime(i))
+      {
+          return(i)
+      }
+    }
+  }
+  return("error: cannot process largest factorial")
+}
+
+#list the prime factorials of the elements of x
 primeFact<-function(x)
 {
-  if(prime(x))return(x);
-  factList = c();
-  halve = x/2;
-  for(i in 2:halve)
+  if(is.numeric(x))
   {
-    if(x %% i == 0)
+    if(length(x)==1)
     {
-      if(prime(i))
-      {
-        factList=c(factList,i);
-      }
+      return(list(atomic_primeFact(x)))
     }
-  }
-  return(sort(factList));
-}
-
-largestPF<-function(x)
-{
-  if(prime(x))return(x);
-  halve = x/2;
-  Y<-c()
-  for(i in 2:halve)
-  {
-    if(x %% i == 0)
+    factList = list()
+    for(i in x)
     {
-        Y<-c(Y,i)
+      factList[[as.character(i)]] = atomic_primeFact(i)
     }
+    return(factList)
   }
+  return("error: cannot process prime factorial list")
 }
 
-primeFactList<-function(x)
-{
-  if(length(x)==1)return(primeFact(x));
-  factList = list();
-  for(i in x)
-  {
-    factList[[as.character(i)]] = primeFact(i);
-  }
-  return(factList);
-}
-
+#print a visualization of the distribution of primes in x
 primeView<-function(x)
 {
-  n = primeVec(x);
-  return(plot(x,n,'h'));
+  n = prime(x)
+  return(plot(x,n,'h'))
 }
 
-primeRange<-function(low,hi)
-{
-  if(hi < 0) hi = 0;
-  if(low < 0) low = 0;
-  reRay = c();
-  for(i in low:hi)
-  {
-    if(prime(i))
-    {
-      reRay = c(reRay, i);
-    }
-  }
-  return(reRay);
-}
 
-primeMatrix<-function(start,cols,rows)
+#list all primes within the range of low to hi
+primeRange<-function(low, hi)
 {
-  if(rows>=1 && cols>=1 && start>=1)
+  if(is.numeric(low) & is.numeric(hi) & length(low) == length(hi))
   {
-    dim<-list(seq(0, rows-1,1),seq(start,start+cols-1,1))
-    Mat<-matrix(ncol=cols, nrow=rows, dimnames=dim)
-    for(i in 1:rows)
+    if(hi < 0) hi = 0
+    if(low < 0) low = 0
+    reRay = c();
+    for(i in low:hi)
     {
-      for(j in 1:cols)
+      if(atomic_prime(i))
       {
-        Mat[i,j] = ifelse(prime(start, F), start, 0)
-        start = start+1
+        reRay = c(reRay, i)
       }
     }
-    return(Mat)
+    return(reRay)
   }
-  return(-1)
+  return("error: Must have numeric types of length 1")
 }
