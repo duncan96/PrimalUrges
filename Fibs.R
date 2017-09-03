@@ -1,15 +1,23 @@
-Fib<-function(x, n)
+#Functions for creating, utilizing and exploring the properties of fibonacci type sequences
+
+#Function for generating a vector of n fibonacci numbers starting with x, y
+Fib<-function(n = 100, x = 1, y = 1, var = F)
 {
-  if(length(x) == 1)
+  if(!is.numeric(n) | !is.numeric(x) | !is.numeric(y) | (y < x & var == T) |
+     !all(c(length(n), length(x), length(y)) == 1))
   {
-    y = x;
-    z = 0;
-    if(n<=2)
-    {
-      if(n<1)return();
-      if(n==1)return(x);
-      if(n==2)return(c(x,x));
-    }
+    return("error: must be numeric values with n of length 1")
+  }
+  y <- ifelse(var, y, x)
+  z = 0;
+  if(n<=2)
+  {
+    if(n<1)return();
+    if(n==1)return(x);
+    if(n==2)return(c(x,y));
+  }
+  else
+  {
     fib = c(x,y);
     n=n-2;
     while(n>0)
@@ -22,50 +30,35 @@ Fib<-function(x, n)
     }
     return(fib);
   }
-  else
+}
+
+#generate fibonacci matrix of n cols and length(x) * length(y) rows
+Fib_Matrix<-function(n, x = 1, y = 1)
+{
+  if(!is.numeric(x) | !is.numeric(y) | !is.numeric(n) | y < x | length(n) != 1)
   {
-    fib<-c()
-    for(i in 1:length(x))
+    return("error: must be numeric values for all entries n, x, y with length n = 1 and y >= x")
+  }
+  fibs<-c()
+  for(i in x)
+  {
+    for(j in y)
     {
-      fib<-c(fib, Fib(x[i],n))
+      fibs <- c(fib(n,i,j))
     }
-    return(matrix(fib, ncol = length(x)))
   }
+  return(matrix(fibs, ncol = n))
 }
 
-
-Fibs<-Fib(1,1000)
-
-FibVar<-function(x,y,n)
-{
-  if(n<=2)
-  {  
-    if(n<1)return();
-    if(n==1)return(x);
-    if(n==2)return(c(x,y));
-  }
-  fib = c(x,y);
-  n = n-2;
-  while(n>0)
-  {
-    fib = c(fib,x+y);
-    z=y;
-    y=x+y;
-    x=z;
-    n=n-1;
-  }
-  return(fib);
-}
-
-FibIters<-function(n)
-{
-  return(Fib(1,n));
-}
-
+#Return the number of iterations of basic fibonacci sequence to reach n
 FibTo<-function(n)
 {
+  if(!is.numeric(n) | length(n) != 1)
+  {
+    return('error: n must be numeric of length 1')
+  }
   if(n<=2)
-  {  
+  {
     if(n<1)return(0);
     if(n==1)return(1);
     if(n==2)return(3);
@@ -84,43 +77,14 @@ FibTo<-function(n)
   return(fib);
 }
 
-isFib<-function(num, base)
+#Shows the value to which the ratio between sequential iterations converge over n trials, starting at x
+FibConverge<-function(n, x = 1, y = 1, var = F)
 {
-  s<-Fib(base,num+1);
-  return(any(s==num));
-}
-
-FibN<-function(n, base)
-{
-  s<-Fib(base, n);
-  return(s[n]);
-}
-
-FibMatrix<-function(rows,cols, var=F)
-{
-  if(rows <= 0 || cols <= 0)return(-1)
-  Y <- list(seq(1,rows,1), seq(0,cols-1,1))
-  M <- matrix(nrow=rows, ncol=cols, dimnames=Y)
-  for(i in 1:rows)
+  if(n < 2 | x < 1 | y < x | !is.numeric(n) | !is.numeric(x) | !all(c(length(n), length(x), length(y)) == 1))
   {
-    if(var){
-      fib<-FibVar(1,i,cols)
-    }
-    else
-    {
-      fib<-Fib(i, cols)
-    }
-    for(j in 1:cols)
-    {
-      M[i,j]<-fib[j]
-    }
+    return("error: n and x must be numeric values of length 1, where n > 2, x > 1")
   }
-  return(M)
-}
-
-FibConverge<-function(x,n)
-{
-  A<-Fib(x, n);
+  A<-Fib(n, x, y, var);
   B<-A[1:n-1];
   for(i in 2:n)
   {
@@ -131,56 +95,45 @@ FibConverge<-function(x,n)
   return(B)
 }
 
-FibTrans<-function(digs)
+
+#Basic Fibonacci Sequence of length n
+Fibonacci_Seq<-function(n = 1000)
 {
-  x<-1
-  y<-1
-  z<-0
-  n<-2
-  while(y<10^digs)
-  {
-    z<-y
-    y<-x+y
-    x<-z
-    n<-n+1
-  }
-  print(x)
-  print(y)
-  return(n)
+  return(Fib(n))
 }
 
 
-FibSpirals<-function(levels, ind=F)
+#return a Fibonacci matrix of size rows x cols
+Fibbonaci_Matrix<-function(cols=10, rows=1, var=F)
+{
+  if(rows <= 0 || cols <= 0)return(-1)
+  RCnames <- list(seq(1,rows,1), seq(0,cols-1,1))
+  M <- matrix(nrow=rows, ncol=cols, dimnames=RCnames)
+  for(i in 1:rows)
+  {
+    M[i,] <- ifelse(var, Fib(cols,1,i), Fib(cols,i))
+  }
+  return(M)
+}
+
+#Create a Spiral Matrix (2*levels x 2*levels centered at 1) showing values of the Fibonacci Sequence
+#If ind, show the numeric value, otherwise show the position in the sequence
+Fibonacci_Spirals<-function(levels, ind=F)
 {
   Mat<-spiralMatrix(levels)
   d<-dim(Mat)
+  fibSeq <- Fibonacci_Seq()
   for(i in 1:d[1])
   {
     for(j in 1:d[2])
     {
-      Mat[i,j]<-ifelse(contains(Fibs,Mat[i,j]), ifelse(ind, match(Mat[i,j],Fibs),Mat[i,j]),0)
+      Mat[i,j]<-ifelse(any(fibSeq == Mat[i,j]), ifelse(ind, match(Mat[i,j],fibSeq),Mat[i,j]), 0)
     }
   }
   return(Mat)
 }
 
-contains<-function(ray, N, list=F)
-{
-  if(!list)
-  {
-    for(i in ray)
-    {
-      if(i == N) return(T)
-    }
-    return(F)
-  }
-  else
-  {
-    if(is.null(ray$N)) return(F)
-    return(T)
-  }
-}
-
+#Basic Spiral Matrix, values spiral out from center
 spiralMatrix<-function(levels)
 {
   ODDV<-levels*2-1
@@ -199,11 +152,10 @@ spiralMatrix<-function(levels)
     n<-n+1
     m<-m-1
   }
-
   return(FinalM)
 }
 
-
+#Helper function for generating spiral matrix
 outerMat<-function(Matrix, outer, currentLevel, total)
 {
   final<-total
@@ -237,6 +189,7 @@ outerMat<-function(Matrix, outer, currentLevel, total)
   return(Matrix)
 }
 
+#Helper function for generating spiral matrix
 corners<-function(size)
 {
   levels<-ceiling(size/2)+1

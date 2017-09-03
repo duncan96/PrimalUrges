@@ -48,9 +48,7 @@ prime <- function(x, intv = F)
 #returns vector containing only the primes in x
 primeFilter<-function(x)
 {
-  if(is.numeric(x)
-
-     )
+  if(is.numeric(x))
   {
     return(x[prime(x)])
   }
