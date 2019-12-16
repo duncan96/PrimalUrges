@@ -1,5 +1,6 @@
 
 #efficient boolean primality check
+### TODO implement in c++
 atomic_prime<-function(x)
 {
   if(x <= 1){return(F)}
